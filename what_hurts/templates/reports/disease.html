@@ -1,0 +1,40 @@
+{% extends "base.html" %}{% block content %}
+<h1>Заболеваемость по болезням</h1>
+
+<form class="filters" method="get">
+  <label>С даты<input type="date" name="start_date" value="{{ request.args.get('start_date','') }}"></label>
+  <label>По дату<input type="date" name="end_date" value="{{ request.args.get('end_date','') }}"></label>
+  <button class="button">Сформировать</button>
+  <a class="button secondary" href="{{ url_for('reports.by_disease_csv', **filter_args) }}">Экспорт CSV</a>
+</form>
+
+<div class="panel">
+  <p class="muted">
+    Всего больных за период: <strong>{{ total_patients }}</strong>;
+    вызовов: <strong>{{ total_calls }}</strong>.
+  </p>
+  <table>
+    <tr>
+      <th>Болезнь (диагноз)</th>
+      <th>Количество больных</th>
+      <th>Количество вызовов</th>
+      <th></th>
+    </tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.disease }}</td>
+      <td>{{ r.patient_count }}</td>
+      <td>{{ r.call_count }}</td>
+      <td><a href="{{ url_for('reports.disease_detail', disease=r.disease, **filter_args) }}">Список больных</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Нет данных за выбранный период.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<p>
+  <a href="{{ url_for('reports.index', **filter_args) }}">Детальный отчёт по вызовам</a> ·
+  <a href="{{ url_for('reports.summary', **filter_args) }}">Сводка по врачам</a>
+</p>
+{% endblock %}

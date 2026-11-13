@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<h1>Детальный отчет по вызовам</h1>
+<form class="filters" method="get">
+  <label>С даты<input type="date" name="start_date" value="{{ request.args.get('start_date','') }}"></label>
+  <label>По дату<input type="date" name="end_date" value="{{ request.args.get('end_date','') }}"></label>
+  <button class="button">Сформировать</button>
+  <a class="button secondary" href="{{ url_for('reports.export_csv', **filter_args) }}">Экспорт CSV</a>
+</form>
+{% include "calls/_table.html" %}
+<p>
+  <a href="{{ url_for('reports.summary', **filter_args) }}">Сводка по врачам</a> ·
+  <a href="{{ url_for('reports.by_disease', **filter_args) }}">Заболеваемость по болезням</a>
+</p>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block content %}
+<h1>Лекарства</h1>
+{% if current_user.role in ['doctor','admin'] %}
+  <a class="button" href="{{ url_for('medicines.create_medicine') }}">Добавить лекарство</a>
+{% endif %}
+<div class="grid">
+{% for m in medicines %}
+  <article class="panel">
+    <div class="medicine-header">
+      {% if m.image_filename %}
+        <img class="medicine-thumb"
+             src="{{ url_for('static', filename='uploads/medicines/' ~ m.image_filename) }}"
+             alt="{{ m.name }}" loading="lazy">
+      {% else %}
+        <div class="medicine-thumb medicine-thumb--empty" aria-hidden="true">💊</div>
+      {% endif %}
+      <h3>{{ m.name }}</h3>
+    </div>
+    <p>{{ m.description }}</p>
+    <p class="muted">{{ m.characteristics }}</p>
+    {% if m.side_effects %}
+      <p><strong>Побочные эффекты:</strong> {{ m.side_effects }}</p>
+    {% endif %}
+    {% if current_user.role == 'admin' %}
+      <a href="{{ url_for('medicines.edit_medicine', medicine_id=m.id) }}">Изменить</a>
+      <form method="post" action="{{ url_for('medicines.delete_medicine', medicine_id=m.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="link-button" onclick="return confirm('Удалить лекарство?')">Удалить</button>
+      </form>
+    {% endif %}
+  </article>
+{% else %}<p>Справочник пуст.</p>{% endfor %}
+</div>
+{% endblock %}

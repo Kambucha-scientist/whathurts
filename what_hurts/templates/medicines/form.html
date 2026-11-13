@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block content %}
+<h1>{{ title }}</h1>
+<section class="panel">
+  <form method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    {% for field in [form.name, form.description, form.characteristics, form.side_effects] %}
+      <label>{{ field.label }}{{ field() }}
+        {% for e in field.errors %}<small class="error">{{ e }}</small>{% endfor %}
+      </label>
+    {% endfor %}
+
+    {% if medicine and medicine.image_filename %}
+      <div class="current-image">
+        <img src="{{ url_for('static', filename='uploads/medicines/' ~ medicine.image_filename) }}"
+             alt="{{ medicine.name }}" class="medicine-thumb">
+        <label class="inline">{{ form.remove_image() }} Удалить текущее изображение</label>
+      </div>
+    {% endif %}
+
+    <label>{{ form.image_file.label }}{{ form.image_file() }}
+      {% for e in form.image_file.errors %}<small class="error">{{ e }}</small>{% endfor %}
+      <small class="muted">JPG, PNG, WEBP или GIF, до 5 МБ.</small>
+    </label>
+
+    {{ form.submit(class_="button") }}
+  </form>
+</section>
+{% endblock %}

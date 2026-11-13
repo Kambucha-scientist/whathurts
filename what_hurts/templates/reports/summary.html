@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<h1>Количество вызовов по врачам</h1>
+<div class="panel">
+  <table>
+    <tr><th>Врач</th><th>Количество</th></tr>
+    {% for name,count in totals.items() %}
+    <tr><td>{{ name }}</td><td>{{ count }}</td></tr>
+    {% else %}
+    <tr><td colspan="2">Нет данных за выбранный период.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+<p>
+  <a href="{{ url_for('reports.index', **filter_args) }}">Детальный отчёт</a> ·
+  <a href="{{ url_for('reports.by_disease', **filter_args) }}">Заболеваемость по болезням</a>
+</p>
+{% endblock %}

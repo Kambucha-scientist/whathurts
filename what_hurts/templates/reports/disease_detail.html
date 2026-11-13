@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% block content %}
+<h1>Больные: «{{ disease }}»</h1>
+<p class="muted">
+  Уникальных больных: <strong>{{ patients|length }}</strong>;
+  вызовов: <strong>{{ calls|length }}</strong>.
+</p>
+
+<div class="panel">
+  <h2>Пациенты</h2>
+  <table>
+    <tr><th>ФИО</th><th>Дата рождения</th><th>Телефон</th><th>Адрес</th></tr>
+    {% for p in patients %}
+    <tr>
+      <td>{{ p.full_name }}</td>
+      <td>{{ p.birth_date.strftime('%d.%m.%Y') }}</td>
+      <td>{{ p.phone }}</td>
+      <td>{{ p.address }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Нет данных.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="panel">
+  <h2>Вызовы с этим диагнозом</h2>
+  {% with calls=calls %}{% include "calls/_table.html" %}{% endwith %}
+</div>
+
+<p><a href="{{ url_for('reports.by_disease', **filter_args) }}">Назад к заболеваемости</a></p>
+{% endblock %}
